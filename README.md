@@ -65,7 +65,7 @@ Agar video yuklansa shunday javob qaytadi:
 
 ```json
 {
-  "success": true,
+  "status": 200,
   "message": "Video downloaded successfully",
   "filename": "<videoning nomi>",
   "path": "<video saqlangan path>",

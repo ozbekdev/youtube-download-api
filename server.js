@@ -17,11 +17,11 @@ app.post('/download/:quality', async (req, res) => {
     const quality = req.params.quality;
 
     if (!url) {
-      return res.status(400).json({ error: 'URL is required' });
+      return res.status(400).json({ error: 'URL kiritish shart' });
     }
 
     if (!url.match(/^(https?:\/\/)?(www\.)?(youtube\.com|youtu\.be)/)) {
-      return res.status(400).json({ error: 'Invalid YouTube URL' });
+      return res.status(400).json({ error: 'Xato YouTube URL' });
     }
 
     const qualityFormats = {
@@ -37,8 +37,8 @@ app.post('/download/:quality', async (req, res) => {
 
     const format = qualityFormats[quality];
     if (!format) {
-      return res.status(400).json({ 
-        error: 'Invalid quality. Supported: 144p, 240p, 360p, 480p, 720p, 1080p, 1440p, 2160p' 
+      return res.status(400).json({
+        error: 'Xato resolution. Shulardan foydalaning: 144p, 240p, 360p, 480p, 720p, 1080p, 1440p, 2160p'
       });
     }
 
@@ -63,16 +63,16 @@ app.post('/download/:quality', async (req, res) => {
 
     if (!fs.existsSync(filePath)) {
       const files = fs.readdirSync(downloadsDir);
-      const matchingFile = files.find(file => 
+      const matchingFile = files.find(file =>
         file.startsWith(info.title.replace(/[^a-zA-Z0-9]/g, '_'))
       );
       if (matchingFile) {
         const actualPath = path.join(downloadsDir, matchingFile);
         const fileStats = fs.statSync(actualPath);
-        
+
         res.json({
-          success: true,
-          message: 'Video downloaded successfully',
+          status: 200,
+          message: 'Video yuklab olindi',
           filename: matchingFile,
           path: actualPath,
           size: Math.round((fileStats.size / 1024 / 1024) * 100) / 100 + ' MB',
@@ -85,10 +85,10 @@ app.post('/download/:quality', async (req, res) => {
 
     if (fs.existsSync(filePath)) {
       const fileStats = fs.statSync(filePath);
-      
+
       res.json({
-        success: true,
-        message: 'Video downloaded successfully',
+        status: 200,
+        message: 'Video yuklandi',
         filename: actualFilename,
         path: filePath,
         size: Math.round((fileStats.size / 1024 / 1024) * 100) / 100 + ' MB',
@@ -96,22 +96,21 @@ app.post('/download/:quality', async (req, res) => {
         quality: quality
       });
     } else {
-      res.status(500).json({ error: 'Downloaded file not found' });
+      res.status(500).json({ error: 'Yuklangan fayl mavjud emas' });
     }
 
   } catch (error) {
-    console.error('Error downloading video:', error);
-    res.status(500).json({ error: 'Failed to download video', details: error.message });
+    console.error('Videoni yuklashda muammo:', error);
+    res.status(500).json({ error: 'Videoni yuklashda xatolik', details: error.message });
   }
 });
 
 app.get('/health', (req, res) => {
-  res.json({ status: 'OK', message: 'YouTube Downloader API is running' });
+  res.json({ status: 'OK', message: 'ishga tushdi ✅' });
 });
 
 app.listen(PORT, () => {
-  console.log(`YouTube Downloader API running on http://127.0.0.1:${PORT}`);
-  console.log(`Example: POST http://127.0.0.1:${PORT}/download/1080p with {"url":"https://youtu.be/EqSzJbt5G9E"}`);
+  console.log(`Shu yerda http://127.0.0.1:${PORT}`);
 });
 
 module.exports = app;
